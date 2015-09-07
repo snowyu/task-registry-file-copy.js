@@ -14,7 +14,7 @@ MISSING_OPTIONS = 'missing path or dest'
 
 module.exports  = class CopyFileTask
   register CopyFileTask, ResourceTask #the real name: '/Resource/CopyFile'
-  aliases CopyFileTask, 'Copy', 'copy'
+  aliases CopyFileTask, 'Copy', 'copy', 'FileCopy'
 
   _executeSync: (aFile)->
     if aFile.path? and aFile.dest?
@@ -53,7 +53,7 @@ module.exports  = class CopyFileTask
 
   _execute: (aFile, done)->
     if aFile.path? and aFile.dest?
-      if isFunction(aFile.getContentSync)
+      if isFunction(aFile.getContent)
         aFile.getContent text:false, _copyFilecallback(aFile, done)
       else
         fs.readFile aFile.path, _copyFilecallback(aFile, done)
