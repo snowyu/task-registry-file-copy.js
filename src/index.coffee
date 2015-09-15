@@ -16,6 +16,10 @@ module.exports  = class CopyFileTask
   register CopyFileTask, ResourceTask #the real name: '/Resource/CopyFile'
   aliases CopyFileTask, 'Copy', 'copy', 'FileCopy'
 
+  defineProperties @,
+    dest:
+      type: 'String'
+
   _executeSync: (aFile)->
     if aFile.path? and aFile.dest?
       if isFunction(aFile.getContentSync)
