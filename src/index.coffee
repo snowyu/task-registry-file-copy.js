@@ -27,6 +27,8 @@ module.exports  = class CopyFileTask
   _executeSync: (aFile)->
     if aFile.path? and aFile.dest?
       if isFunction(aFile.getContentSync)
+        if !aFile.hasOwnProperty('_contents') && aFile.parent && !aFile.parent.isDirectory()
+          aFile = aFile.parent
         contents = aFile.getContentSync(text:false)
       else
         contents = fs.readFileSync aFile.path
@@ -62,6 +64,8 @@ module.exports  = class CopyFileTask
   _execute: (aFile, done)->
     if aFile.path? and aFile.dest?
       if isFunction(aFile.getContent)
+        if !aFile.hasOwnProperty('_contents') && aFile.parent && !aFile.parent.isDirectory()
+          aFile = aFile.parent
         aFile.getContent text:false, _copyFilecallback(aFile, done)
       else
         fs.readFile aFile.path, _copyFilecallback(aFile, done)
