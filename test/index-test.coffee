@@ -19,7 +19,7 @@ Resource.setFileSystem fs
 
 describe 'FileCopyTask', ->
   task = Task 'Copy'
-  file = Resource './fixture/src.md', cwd:__dirname, dest: 'fixture/dest.md'
+  file = Resource './fixture/src.md', cwd:__dirname, dest: 'fixture/dest.md', load:true, read:true
 
   afterEach ->
     try fs.unlinkSync path.join __dirname, 'fixture/dest.md'
@@ -28,8 +28,8 @@ describe 'FileCopyTask', ->
     aDest = path.resolve __dirname, aDest
     result = fs.existsSync aDest
     expect(result).to.be.true
-    result = fs.readFileSync aDest
-    expect(result).to.be.deep.equal aSrc.contents
+    result = fs.readFileSync aDest, encoding:'utf8'
+    expect(result).to.be.equal aSrc.contents.toString()
 
   it 'should get file copy task', ->
     expect(task).to.be.instanceOf FileCopyTask
@@ -71,6 +71,26 @@ describe 'FileCopyTask', ->
       task.executeSync(vFile)
       checkDestFile vFile, './src.md'
       fs.unlinkSync path.join __dirname, 'src.md'
+
+    it 'should copy a inherited file object', ->
+      vFile = {}
+      vFile.__proto__ = file
+      task.executeSync(vFile)
+      checkDestFile file
+    it 'should copy a inherited file object if dest is exists and overwrite is true', ->
+      task.executeSync(file)
+      checkDestFile file
+      file.overwrite = true
+      vFile = {overwrite:false}
+      vFile.__proto__ = file
+      expect(task.executeSync.bind(task, vFile)).to.throw 'EEXIST'
+      delete file.overwrite
+    it 'should copy a inherited file object with custom contents', ->
+      contents = fs.readFileSync path.join __dirname, './fixture/src2.md'
+      vFile = {_contents: contents}
+      vFile.__proto__ = file
+      task.executeSync(vFile)
+      checkDestFile vFile, './fixture/src2.md'
 
   describe 'execute', ->
     it 'should raise error if no path or dest', (done)->
@@ -119,4 +139,31 @@ describe 'FileCopyTask', ->
         unless err
           checkDestFile vFile, './src.md'
           fs.unlinkSync path.join __dirname, 'src.md'
+        done(err)
+
+    it 'should copy a inherited file object', (done)->
+      vFile = {}
+      vFile.__proto__ = file
+      task.execute vFile, (err)->
+        checkDestFile file unless err
+        done(err)
+
+    it 'should copy a inherited file object if dest is exists and overwrite is true', (done)->
+      task.execute file, (err)->
+        return done(err) if err
+        checkDestFile file
+        file.overwrite = true
+        vFile = overwrite: false
+        vFile.__proto__ = file
+        task.execute vFile, (err)->
+          delete file.overwrite
+          expect(err).to.be.exist
+          done()
+
+    it 'should copy a inherited file object with custom contents', (done)->
+      contents = fs.readFileSync path.join __dirname, './fixture/src2.md'
+      vFile = {_contents: contents}
+      vFile.__proto__ = file
+      task.execute vFile, (err)->
+        checkDestFile vFile, './fixture/src2.md' unless err
         done(err)

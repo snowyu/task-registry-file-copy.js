@@ -28,7 +28,7 @@
   "dependencies": {
     "graceful-fs": "^4.1.2",
     "path.js": "^1.0.7",
-    "task-registry": "^0.2.5",
+    "task-registry": "^0.2.7",
     "task-registry-resource": "^0.1.0",
     "util-ex": "^0.3.14"
   },
