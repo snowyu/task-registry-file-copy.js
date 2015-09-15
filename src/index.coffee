@@ -21,6 +21,8 @@ module.exports  = class CopyFileTask
       type: 'String'
     dest:
       type: 'String'
+    overwrite:
+      type: 'Boolean'
 
   _executeSync: (aFile)->
     if aFile.path? and aFile.dest?
