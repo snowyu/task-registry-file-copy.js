@@ -17,6 +17,8 @@ module.exports  = class CopyFileTask
   aliases CopyFileTask, 'Copy', 'copy', 'FileCopy'
 
   defineProperties @,
+    path:
+      type: 'String'
     dest:
       type: 'String'
 
