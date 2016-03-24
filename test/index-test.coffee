@@ -14,7 +14,8 @@ fs              = require 'graceful-fs'
 path            = require 'path.js'
 FileCopyTask    = require '../src'
 
-fs.cwd = process.cwd
+fs.cwd  = process.cwd
+fs.path = path
 Resource.setFileSystem fs
 
 describe 'FileCopyTask', ->
