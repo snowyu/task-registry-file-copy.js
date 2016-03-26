@@ -28,7 +28,7 @@ module.exports  = class CopyFileTask
     if aFile.path? and aFile.dest?
       if isFunction(aFile.getContentSync)
         if !aFile.hasOwnProperty('_contents') && aFile.parent && !aFile.parent.isDirectory()
-          #  the inherited file resource object use the parent's contents if parent is a file(not folder) and  no contents on itself.
+          # the inherited file resource object use the parent's contents if parent is a file(not folder) and  no contents on itself.
           vFile = aFile.parent
         else
           vFile = aFile
