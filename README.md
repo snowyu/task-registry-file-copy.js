@@ -25,6 +25,8 @@ copyFileTask.executeSync {
 
 ## API
 
++ should copy folder resource to dest now.
++ `ignoreEmptyFile` *Boolean*: should ignore the file with the empty contents. defaults to false.
 
 ## TODO
 
